@@ -1,4 +1,4 @@
-package SmartStart;
+package it.andrea.smartstart;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class Starter {
 	}
 
 	private BigDecimal getDistance(List<Request> subset) {
-		
+		return null;
 	}
 
 	private void start() {

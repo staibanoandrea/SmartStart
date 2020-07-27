@@ -1,4 +1,4 @@
-package SmartStart;
+package it.andrea.smartstart;
 
 import java.math.BigDecimal;
 
