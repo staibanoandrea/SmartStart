@@ -1,14 +1,12 @@
 package it.andrea.smartstart;
 
-import java.math.BigDecimal;
-
 public class Request {
-	private int index;
-	private int xPos;
-	private int yPos;
-	private BigDecimal requestTime;
+	private Integer index;
+	private Integer xPos;
+	private Integer yPos;
+	private Double requestTime;
 
-	public Request(int index, int xPos, int yPos, BigDecimal requestTime) {
+	public Request(Integer index, Integer xPos, Integer yPos, Double requestTime) {
 		super();
 		this.index = index;
 		this.xPos = xPos;
@@ -16,19 +14,19 @@ public class Request {
 		this.requestTime = requestTime;
 	}
 
-	public int getIndex() {
+	public Integer getIndex() {
 		return index;
 	}
 
-	public int getxPos() {
+	public Integer getxPos() {
 		return xPos;
 	}
 
-	public int getyPos() {
+	public Integer getyPos() {
 		return yPos;
 	}
 
-	public BigDecimal getRequestTime() {
+	public Double getRequestTime() {
 		return requestTime;
 	}
 }
