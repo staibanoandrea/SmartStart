@@ -1,7 +1,6 @@
 package it.andrea.smartstart;
 
 import java.util.List;
-import java.util.Map;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
@@ -9,23 +8,27 @@ import redis.clients.jedis.JedisPubSub;
 public class Orchestrator extends JedisPubSub {
 
     private Jedis jedis;
-    private Map<String, Destination> destinations;
+    private Crane crane;
+    private Bin bin;
 
     public Orchestrator() {
         super();
         jedis = new Jedis();
+        subscribe();
     }
 
-    public void addSubscriber(Destination destination) {
-        jedis.subscribe(this, destination.getChannelName());
-        destinations.put(destination.getChannelName(), destination);
+    private void subscribe() {
+        jedis.subscribe(this, "channel");
     }
 
     @Override
     public void onMessage(String channel, String message) {
         System.out.println("Channel " + channel + " has sent a message : " + message);
-        if (destinations.containsKey(channel)) {
-            destinations.get(channel).onMessage(message);
+        switch (channel) {
+        case "a":
+            break;
+        default:
+            break;
         }
     }
 
