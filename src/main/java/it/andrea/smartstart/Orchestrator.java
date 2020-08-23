@@ -8,8 +8,9 @@ import redis.clients.jedis.JedisPubSub;
 public class Orchestrator extends JedisPubSub {
 
     private Jedis jedis;
+    private Operator operator;
     private Crane crane;
-    private Bin bin;
+    private Shuttle shuttle;
 
     public Orchestrator() {
         super();

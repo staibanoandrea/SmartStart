@@ -2,31 +2,36 @@ package it.andrea.smartstart;
 
 public class Request {
 	private Integer index;
-	private Integer xPos;
-	private Integer yPos;
-	private Double requestTime;
+	private Integer x;
+	private Integer y;
+	private Integer requestTime;
 
-	public Request(Integer index, Integer xPos, Integer yPos, Double requestTime) {
+	public Request(Integer index, Integer xPos, Integer yPos, Integer requestTime) {
 		super();
 		this.index = index;
-		this.xPos = xPos;
-		this.yPos = yPos;
+		this.x = xPos;
+		this.y = yPos;
 		this.requestTime = requestTime;
+	}
+
+	public Integer getDistanceToRequest(Request request) {
+		return Math.max(Math.abs(getX() - request.getX()),
+				Math.abs(getY() - request.getY()));
 	}
 
 	public Integer getIndex() {
 		return index;
 	}
 
-	public Integer getxPos() {
-		return xPos;
+	public Integer getX() {
+		return x;
 	}
 
-	public Integer getyPos() {
-		return yPos;
+	public Integer getY() {
+		return y;
 	}
 
-	public Double getRequestTime() {
+	public Integer getRequestTime() {
 		return requestTime;
 	}
 }

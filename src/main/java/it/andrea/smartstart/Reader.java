@@ -16,13 +16,14 @@ public class Reader {
 		try {
 			File myObj = new File("istanze.txt");
 			Scanner myReader = new Scanner(myObj);
+			myReader.nextLine(); // salta la prima riga di intestazione
 			while (myReader.hasNextLine()) {
 				// linea prevista (senza spazi): index \t xPos \t yPos \t requestTime \n
 				String data = myReader.nextLine();
 				// TODO crea una lista di richieste?
 				String[] tokenizedData = data.split("\t");
 				Request r = new Request(Integer.parseInt(tokenizedData[0]), Integer.parseInt(tokenizedData[1]),
-						Integer.parseInt(tokenizedData[2]), Double.parseDouble(tokenizedData[3]));
+						Integer.parseInt(tokenizedData[2]), Integer.parseInt(tokenizedData[3]));
 				requestList.add(r);
 			}
 			myReader.close();
