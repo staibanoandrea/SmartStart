@@ -27,32 +27,61 @@ public class Starter {
 	}
 
 	public static List<Request> kPermutate(int k, List<Request> subset) {
-		kPermutateList(new ArrayList<Request>(), k, subset);
-		return null;
+		int size = subset.size();
+		if (size <= 1) {
+			return subset;
+		}
+		List<Request> bestSubset = new ArrayList<Request>();
+		if (size <= k) {
+			recursivePermutate(bestSubset, subset, size);
+			// permutate(subset, 0, size - 1);
+			return bestSubset;
+		}
+		recursivePermutate(bestSubset, subset, k);
+		// permutate(subset, 0, size - 1);
+		return bestSubset;
 	}
 
-	public static void kPermutateList(List<Request> candidate, int iterationsLeft, List<Request> unusedRequests) {
-		if (iterationsLeft == 0) {
-			for (Request r : candidate) {
+	private static void recursivePermutate(List<Request> permutation, List<Request> unusedItems, int itemsNeeded) {
+		if (itemsNeeded <= 0) {
+			for (Request r : permutation) {
 				System.out.print(r.getIndex());
 			}
 			System.out.println();
-			// la lista è pronta per essere valutata;
 		} else {
-			for (Request i : unusedRequests) {
-				kPermutateList(addElement(candidate, i), iterationsLeft--,
-						removeElement(new ArrayList<>(unusedRequests), i));
+			for (Request request : unusedItems) {
+				permutation.add(request);
+				// List<Request> poppedList = remove(unusedItems, request);
+				// itemsNeeded--;
+				recursivePermutate(permutation, remove(unusedItems, request), --itemsNeeded);
 			}
 		}
 	}
 
-	private static <T> List<T> addElement(List<T> list, T element) {
-		list.add(element);
-		return list;
+	private static List<Request> remove(List<Request> list, Request request) {
+		List<Request> newList = new ArrayList<Request>(list);
+		newList.remove(request);
+		return newList;
 	}
 
-	private static <T> List<T> removeElement(List<T> list, T element) {
-		list.remove(element);
+	private static void permutate(List<Request> list, int left, int right) {
+		if (left == right) {
+			for (Request r : list) {
+				System.out.print(r.getIndex());
+			}
+			System.out.println();
+		} else {
+			for (int i = left; i <= right; i++) {
+				List<Request> swappedList = swap(list, left, i);
+				permutate(swappedList, left + 1, right);
+			}
+		}
+	}
+
+	private static <T> List<T> swap(List<T> list, int i, int j) {
+		T temp = list.get(i);
+		list.set(i, list.get(j));
+		list.set(j, temp);
 		return list;
 	}
 
@@ -76,7 +105,10 @@ public class Starter {
 	}
 
 	private static Integer getTotalDistance(List<Request> subset) {
-		Integer totalDistance = 0;
+		if (subset.size() == 0) {
+			return 0;
+		}
+		Integer totalDistance = chebyshevDistance(origin, subset.get(0));
 		ListIterator<Request> r = subset.listIterator();
 		Request current = r.next();
 		while (r.hasNext()) {
@@ -84,6 +116,7 @@ public class Starter {
 			totalDistance += chebyshevDistance(current, next);
 			current = next;
 		}
+		totalDistance += chebyshevDistance(subset.get(subset.size() - 1), origin);
 		return totalDistance;
 	}
 
@@ -92,6 +125,5 @@ public class Starter {
 	}
 
 	public static void start(List<Request> subset) {
-
 	}
 }
