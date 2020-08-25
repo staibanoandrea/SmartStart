@@ -6,7 +6,7 @@ import java.util.ListIterator;
 
 public class Starter {
 	public static final Request origin = new Request(null, 0, 0, null);
-	private static final int CRANE_SIZE = 2;
+	private static final int CRANE_SIZE = 4;
 
 	/*
 	 * Dalla lista completa delle richieste, estrae un subset di richieste ricevute
@@ -36,11 +36,11 @@ public class Starter {
 		}
 		List<Request> bestSubset = new ArrayList<Request>();
 		if (size <= k) {
-			// recursivePermutate(bestSubset, subset, size);
-			bestSubset = permutate(subset, 0, size - 1, null);
+			recursivePermutate(bestSubset, subset, size);
+			// bestSubset = permutate(subset, 0, size - 1, null);
 		} else {
-			// recursivePermutate(bestSubset, subset, k);
-			bestSubset = permutate(subset, 0, size - 1, null);
+			recursivePermutate(bestSubset, subset, k);
+			// bestSubset = permutate(subset, 0, size - 1, null);
 		}
 		return bestSubset;
 	}
@@ -56,7 +56,7 @@ public class Starter {
 				permutation.add(request);
 				// List<Request> poppedList = remove(unusedItems, request);
 				// itemsNeeded--;
-				recursivePermutate(permutation, remove(unusedItems, request), --itemsNeeded);
+				recursivePermutate(permutation, remove(unusedItems, request), itemsNeeded - 1);
 			}
 		}
 	}
