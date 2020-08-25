@@ -1,15 +1,27 @@
 package it.andrea.smartstart;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SmartStart {
-	private static final double alpha = 1.0;
-	private static final int CRANE_SIZE = 2;
+	private static final double alpha = 0.14;
 
 	public static void main(String[] args) {
+		List<List<Request>> craneWorkSheet = new ArrayList<List<Request>>();
 		List<Request> requestList = Reader.getRequests();
-		List<Request> subset = Starter.createSubset(alpha, requestList);
-		Starter.kPermutate(CRANE_SIZE, subset);
-		Starter.start(subset);
+		while (!requestList.isEmpty()) {
+			List<Request> subset = Starter.createSubset(alpha, requestList);
+			craneWorkSheet.add(subset);
+			requestList.removeAll(subset);
+		}
+		// print the whole list of requests, divided by subsets:
+		for (List<Request> subset : craneWorkSheet) {
+			for (Request request : subset) {
+				System.out.print(request.getIndex() + " ");
+			}
+			System.out.println();
+		}
+		// Placeholder method for crane to work:
+		Starter.start(craneWorkSheet);
 	}
 }

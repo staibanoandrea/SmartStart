@@ -6,6 +6,7 @@ import java.util.ListIterator;
 
 public class Starter {
 	public static final Request origin = new Request(null, 0, 0, null);
+	private static final int CRANE_SIZE = 2;
 
 	/*
 	 * Dalla lista completa delle richieste, estrae un subset di richieste ricevute
@@ -13,17 +14,19 @@ public class Starter {
 	 */
 	public static List<Request> createSubset(Double alpha, List<Request> requestList) {// works for alpha > 0;
 		List<Request> subset = new ArrayList<Request>();
-		Double timeLimit = 5.0;
+		List<Request> bestRSubset = new ArrayList<Request>();
+		Double timeLimit = Double.MAX_VALUE;
 		// Double timeLimit = new Double(requestList.get(0).getRequestTime());
 		for (Request r : requestList) {
 			if (r.getRequestTime() > timeLimit) {
 				break;
 			} else {
 				subset.add(r);
-				// timeLimit = alpha * getTotalDistance(subset);
+				bestRSubset = kPermutate(CRANE_SIZE, subset);
+				timeLimit = alpha * getTotalDistance(bestRSubset);
 			}
 		}
-		return subset;
+		return bestRSubset;
 	}
 
 	public static List<Request> kPermutate(int k, List<Request> subset) {
@@ -33,12 +36,12 @@ public class Starter {
 		}
 		List<Request> bestSubset = new ArrayList<Request>();
 		if (size <= k) {
-			recursivePermutate(bestSubset, subset, size);
-			// permutate(subset, 0, size - 1);
-			return bestSubset;
+			// recursivePermutate(bestSubset, subset, size);
+			bestSubset = permutate(subset, 0, size - 1, null);
+		} else {
+			// recursivePermutate(bestSubset, subset, k);
+			bestSubset = permutate(subset, 0, size - 1, null);
 		}
-		recursivePermutate(bestSubset, subset, k);
-		// permutate(subset, 0, size - 1);
 		return bestSubset;
 	}
 
@@ -64,18 +67,25 @@ public class Starter {
 		return newList;
 	}
 
-	private static void permutate(List<Request> list, int left, int right) {
+	private static List<Request> permutate(List<Request> list, int left, int right, List<Request> bestList) {
 		if (left == right) {
-			for (Request r : list) {
-				System.out.print(r.getIndex());
+			/*
+			 * --Stampa-------------------------------------------------------------------
+			 * for (Request r : list) { System.out.print(r.getIndex()); }
+			 * System.out.println();
+			 */
+			if (getTotalDistance(list) < getTotalDistance(bestList)) {
+				return list;
+			} else {
+				return bestList;
 			}
-			System.out.println();
 		} else {
 			for (int i = left; i <= right; i++) {
 				List<Request> swappedList = swap(list, left, i);
-				permutate(swappedList, left + 1, right);
+				bestList = permutate(swappedList, left + 1, right, bestList);
 			}
 		}
+		return bestList;
 	}
 
 	private static <T> List<T> swap(List<T> list, int i, int j) {
@@ -105,8 +115,8 @@ public class Starter {
 	}
 
 	private static Integer getTotalDistance(List<Request> subset) {
-		if (subset.size() == 0) {
-			return 0;
+		if (subset == null) {
+			return Integer.MAX_VALUE;
 		}
 		Integer totalDistance = chebyshevDistance(origin, subset.get(0));
 		ListIterator<Request> r = subset.listIterator();
@@ -124,6 +134,6 @@ public class Starter {
 		return Math.max(Math.abs(source.getX() - destination.getX()), Math.abs(source.getY() - destination.getY()));
 	}
 
-	public static void start(List<Request> subset) {
+	public static void start(List<List<Request>> subset) {
 	}
 }
