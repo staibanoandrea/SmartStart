@@ -1,4 +1,4 @@
-package it.andrea.smartstart;
+package it.andrea.smartstart.other;
 
 import redis.clients.jedis.Jedis;
 

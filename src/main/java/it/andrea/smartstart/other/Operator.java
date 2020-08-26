@@ -1,4 +1,4 @@
-package it.andrea.smartstart;
+package it.andrea.smartstart.other;
 
 import java.util.List;
 

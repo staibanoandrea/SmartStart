@@ -7,20 +7,16 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Reader {
-	private Reader() {
-		// can't be instantiated
-	}
-
 	public static List<Request> getRequests() {
 		List<Request> requestList = new ArrayList<Request>();
 		try {
 			File myObj = new File("istanze.txt");
 			Scanner myReader = new Scanner(myObj);
-			myReader.nextLine(); // salta la prima riga di intestazione
+			// skip the first line;
+			myReader.nextLine();
 			while (myReader.hasNextLine()) {
-				// linea prevista (senza spazi): index \t xPos \t yPos \t requestTime \n
+				// the desired line is (without backspaces): index \t xPos \t yPos \t requestTime \n
 				String data = myReader.nextLine();
-				// TODO crea una lista di richieste?
 				String[] tokenizedData = data.split("\t");
 				Request r = new Request(Integer.parseInt(tokenizedData[0]), Integer.parseInt(tokenizedData[1]),
 						Integer.parseInt(tokenizedData[2]), Integer.parseInt(tokenizedData[3]));

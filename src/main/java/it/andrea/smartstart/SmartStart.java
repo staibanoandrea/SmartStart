@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SmartStart {
-	private static final double alpha = 0.14;
+	private static final double alpha = 1.0;
 
 	public static void main(String[] args) {
 		List<List<Request>> craneWorkSheet = new ArrayList<List<Request>>();
+		// read the whole list:
 		List<Request> requestList = Reader.getRequests();
+		// iteratively get the best subset to serve, and remove it from the list:
 		while (!requestList.isEmpty()) {
-			List<Request> subset = Starter.createSubset(alpha, requestList);
+			List<Request> subset = TourCalculator.createSubset(alpha, requestList);
 			craneWorkSheet.add(subset);
 			requestList.removeAll(subset);
 		}
-		// print the whole list of requests, divided by subsets:
+		// TEST print the whole list of requests, divided by subsets:
 		for (List<Request> subset : craneWorkSheet) {
 			for (Request request : subset) {
 				System.out.print(request.getIndex() + " ");
@@ -22,6 +24,9 @@ public class SmartStart {
 			System.out.println();
 		}
 		// Placeholder method for crane to work:
-		Starter.start(craneWorkSheet);
+		start(craneWorkSheet);
+	}
+	
+	public static void start(List<List<Request>> subset) {
 	}
 }

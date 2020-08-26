@@ -14,11 +14,6 @@ public class Request {
 		this.requestTime = requestTime;
 	}
 
-	public Integer getDistanceToRequest(Request request) {
-		return Math.max(Math.abs(getX() - request.getX()),
-				Math.abs(getY() - request.getY()));
-	}
-
 	public Integer getIndex() {
 		return index;
 	}
