@@ -6,29 +6,6 @@ import java.util.ListIterator;
 
 public class TourCalculator {
 	public static final Request origin = new Request(null, 0, 0, null);
-	private static final int CRANE_SIZE = 2;
-
-	/*
-	 * createSubset takes the whole requestList, but uses it in an online fashion:
-	 */
-	public static List<Request> createSubset(Double alpha, List<Request> requestList) {
-		List<Request> subset = new ArrayList<Request>();
-		List<Request> bestRSubset = new ArrayList<Request>();
-		Double timeLimit = Double.MAX_VALUE; // waits forever until it gets the first request;
-		for (Request r : requestList) {
-			if (r.getRequestTime() > timeLimit) { // if the request arrives after the timelimit, it is excluded from the
-													// subset:
-				break;
-			} else { // add the request to the subset and compute the new timelimit for the next
-						// request:
-				subset.add(r);
-				bestRSubset = kPermutate(CRANE_SIZE, subset); // this is a temporary best subset; it becomes definitive
-																// if the next request is too late;
-				timeLimit = alpha * getTotalDistance(bestRSubset);
-			}
-		}
-		return bestRSubset;
-	}
 
 	/*
 	 * arrange the recursive call for the real permutation method:
@@ -50,7 +27,7 @@ public class TourCalculator {
 	/*
 	 * recursively create a permutation tree:
 	 */
-	public static List<Request> permutate(List<Request> permutation, List<Request> unusedItems, int k,
+	private static List<Request> permutate(List<Request> permutation, List<Request> unusedItems, int k,
 			List<Request> bestPermutation) {
 		if (k == 0) {
 			// evaluate every leaf, and keep only the "best" one:
@@ -85,7 +62,7 @@ public class TourCalculator {
 	 * calculate the total distance of a sorted subset, considering the travel
 	 * from/to the origin point at the start/end of the tour:
 	 */
-	private static Integer getTotalDistance(List<Request> subset) {
+	public static Integer getTotalDistance(List<Request> subset) {
 		if (subset == null || subset.isEmpty()) {
 			return Integer.MAX_VALUE;
 		}

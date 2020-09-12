@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Reader {
-	public static List<Request> getRequests() {
+	public static List<Request> translateFile(File file) {
 		List<Request> requestList = new ArrayList<Request>();
 		try {
-			File myObj = new File("istanze.txt");
-			Scanner myReader = new Scanner(myObj);
+			Scanner myReader = new Scanner(file);
 			// skip the first line;
 			myReader.nextLine();
 			while (myReader.hasNextLine()) {
