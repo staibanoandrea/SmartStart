@@ -3,6 +3,7 @@ package it.andrea.smartstart;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SmartStart {
 	public static void main(String[] args) {
@@ -19,6 +20,9 @@ public class SmartStart {
 		if (args.length == 4) {
 			mode = Integer.parseInt(args[3]);
 		}
+		
+		// metadata:
+		Progress progress = new Progress(craneSize);
 
 		List<List<Request>> craneWorkSheet = new ArrayList<List<Request>>();
 		// read the whole list:
@@ -29,20 +33,19 @@ public class SmartStart {
 			// iteratively get the best subset to serve, and remove it from the list:
 			while (!requestList.isEmpty()) {
 				List<Request> subset = createSubset(alpha, craneSize, requestList);
+				execute(subset, progress); // placeholder call for crane to work, actually outputs data
 				craneWorkSheet.add(subset);
 				requestList.removeAll(subset);
 			}
 		}
 		
-		// TEST print the whole list of requests, divided by subsets:
+		/*// TEST print the whole list of requests, divided by subsets:
 		for (List<Request> subset : craneWorkSheet) {
 			for (Request request : subset) {
 				System.out.print(request.getIndex() + " ");
 			}
 			System.out.println();
-		}
-		// Placeholder method for crane to work:
-		start(craneWorkSheet);
+		}*/
 	}
 
 	/*
@@ -64,6 +67,16 @@ public class SmartStart {
 		return bestRSubset;
 	}
 
-	public static void start(List<List<Request>> subset) {
+	public static void execute(List<Request> subset, Progress progress) {
+		// update all data:
+		progress.update(subset);
+		
+		// prepare output:
+		String indexList = subset.stream()
+			      .map(n -> String.valueOf(n.getIndex()))
+			      .collect(Collectors.joining(", ", "{", "}"));
+		
+		// output:
+		System.out.println("Subset " + progress.getSubsetCounter() + ": " + indexList + " -> Time elapsed: " + TourCalculator.getTotalDistance(subset) + ";");
 	}
 }

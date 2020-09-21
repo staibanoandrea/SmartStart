@@ -2,11 +2,11 @@ package it.andrea.smartstart;
 
 public class Request {
 	private Integer index;
-	private Integer x;
-	private Integer y;
-	private Integer requestTime;
+	private Double x;
+	private Double y;
+	private Double requestTime;
 
-	public Request(Integer index, Integer xPos, Integer yPos, Integer requestTime) {
+	public Request(Integer index, Double xPos, Double yPos, Double requestTime) {
 		super();
 		this.index = index;
 		this.x = xPos;
@@ -18,15 +18,15 @@ public class Request {
 		return index;
 	}
 
-	public Integer getX() {
+	public Double getX() {
 		return x;
 	}
 
-	public Integer getY() {
+	public Double getY() {
 		return y;
 	}
 
-	public Integer getRequestTime() {
+	public Double getRequestTime() {
 		return requestTime;
 	}
 }

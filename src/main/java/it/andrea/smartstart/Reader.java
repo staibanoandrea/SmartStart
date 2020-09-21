@@ -17,8 +17,8 @@ public class Reader {
 				// the desired line is (without backspaces): index \t xPos \t yPos \t requestTime \n
 				String data = myReader.nextLine();
 				String[] tokenizedData = data.split("\t");
-				Request r = new Request(Integer.parseInt(tokenizedData[0]), Integer.parseInt(tokenizedData[1]),
-						Integer.parseInt(tokenizedData[2]), Integer.parseInt(tokenizedData[3]));
+				Request r = new Request(Integer.parseInt(tokenizedData[0]), Double.parseDouble(tokenizedData[1]),
+						Double.parseDouble(tokenizedData[2]), Double.parseDouble(tokenizedData[3]));
 				requestList.add(r);
 			}
 			myReader.close();

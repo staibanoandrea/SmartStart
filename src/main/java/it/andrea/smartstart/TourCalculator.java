@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class TourCalculator {
-	public static final Request origin = new Request(null, 0, 0, null);
+	public static final Request origin = new Request(null, 0.0, 0.0, null);
 
 	/*
 	 * arrange the recursive call for the real permutation method:
@@ -16,11 +16,7 @@ public class TourCalculator {
 			return subset;
 		}
 		List<Request> bestSubset = new ArrayList<Request>();
-		if (size <= k) {
-			bestSubset = permutate(bestSubset, subset, size, null);
-		} else {
-			bestSubset = permutate(bestSubset, subset, k, null);
-		}
+		bestSubset = permutate(bestSubset, subset, Math.min(k, size), null);
 		return bestSubset;
 	}
 
@@ -30,17 +26,29 @@ public class TourCalculator {
 	private static List<Request> permutate(List<Request> permutation, List<Request> unusedItems, int k,
 			List<Request> bestPermutation) {
 		if (k == 0) {
-			// evaluate every leaf, and keep only the "best" one:
+			// evaluate the leaf, and keep it only if it's the "best" one:
 			if (getTotalDistance(permutation) < getTotalDistance(bestPermutation)) {
 				return permutation;
 			} else {
 				return bestPermutation;
 			}
-		} else {
-			// run through the branches:
+			
+		} else if (permutation.isEmpty()){
+			// initialize new branches:
 			for (Request i : unusedItems) {
 				bestPermutation = permutate(addToList(permutation, i), removeFromList(unusedItems, i), k - 1,
 						bestPermutation);
+			}
+			
+		} else {
+			// pre-evaluate the current branch:
+			if (getTotalDistance(permutation) > getTotalDistance(bestPermutation)) {
+				return bestPermutation;
+			} else {
+				for (Request i : unusedItems) {
+					bestPermutation = permutate(addToList(permutation, i), removeFromList(unusedItems, i), k - 1,
+							bestPermutation);
+				}
 			}
 		}
 		return bestPermutation;
@@ -62,11 +70,11 @@ public class TourCalculator {
 	 * calculate the total distance of a sorted subset, considering the travel
 	 * from/to the origin point at the start/end of the tour:
 	 */
-	public static Integer getTotalDistance(List<Request> subset) {
+	public static Double getTotalDistance(List<Request> subset) {
 		if (subset == null || subset.isEmpty()) {
-			return Integer.MAX_VALUE;
+			return Double.MAX_VALUE;
 		}
-		Integer totalDistance = chebyshevDistance(origin, subset.get(0));
+		Double totalDistance = chebyshevDistance(origin, subset.get(0));
 		ListIterator<Request> r = subset.listIterator();
 		Request current = r.next();
 		while (r.hasNext()) {
@@ -81,7 +89,7 @@ public class TourCalculator {
 	/*
 	 * calculate the chebyshev distance between two requests:
 	 */
-	private static Integer chebyshevDistance(Request source, Request destination) {
+	private static Double chebyshevDistance(Request source, Request destination) {
 		return Math.max(Math.abs(source.getX() - destination.getX()), Math.abs(source.getY() - destination.getY()));
 	}
 }
