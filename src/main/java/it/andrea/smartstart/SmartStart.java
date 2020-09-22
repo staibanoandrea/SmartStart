@@ -3,80 +3,73 @@ package it.andrea.smartstart;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SmartStart {
+	public static Request origin;
+	private static final int originIndex = 0;
+	
 	public static void main(String[] args) {
 		/*
 		 * expected line:
-		 * java SmartStart alpha(double) craneSize(int) txtFile(file) [mode(int)]
+		 * java SmartStart alpha(double) craneSize(int) timeFile(file) coordFile(file) [mode(int)]
 		 */
 		// there are no input checks
 		final double alpha = Double.parseDouble(args[0]);
 		final int craneSize = Integer.parseInt(args[1]);
-		final File requestsFile = new File(args[2]);
+		final File timeFile = new File(args[2]);
+		final File coordFile = new File(args[3]);
 		int mode = 0;
 		// mode is optional, and set to default if not inserted as argument
-		if (args.length == 4) {
-			mode = Integer.parseInt(args[3]);
+		if (args.length == 5) {
+			mode = Integer.parseInt(args[4]);
 		}
 		
-		// metadata:
-		Progress progress = new Progress(craneSize);
-
-		List<List<Request>> craneWorkSheet = new ArrayList<List<Request>>();
-		// read the whole list:
-		List<Request> requestList = Reader.translateFile(requestsFile);
+		List<Subset> craneWorkSheet = new ArrayList<Subset>();
+		
+		// create the list of requests from files:
+		List<Request> requestList = Reader.translateFile(timeFile, coordFile);
+		
+		// pop the origin:
+		origin = requestList.get(originIndex);
+		requestList.remove(originIndex);
 		
 		// MODE 0: always serve the best subset first, with no other priorities:
 		if (mode == 0) {
 			// iteratively get the best subset to serve, and remove it from the list:
+			int i = 0;
 			while (!requestList.isEmpty()) {
-				List<Request> subset = createSubset(alpha, craneSize, requestList);
-				execute(subset, progress); // placeholder call for crane to work, actually outputs data
+				i++;
+				Subset subset = createSubset(i, alpha, craneSize, requestList);
+				execute(subset); // placeholder call for crane to work
 				craneWorkSheet.add(subset);
-				requestList.removeAll(subset);
+				requestList.removeAll(subset.getRequestList());
 			}
 		}
 		
-		/*// TEST print the whole list of requests, divided by subsets:
-		for (List<Request> subset : craneWorkSheet) {
-			for (Request request : subset) {
-				System.out.print(request.getIndex() + " ");
-			}
-			System.out.println();
-		}*/
+		// evaluate the created subset:
+		Evaluator evaluator = new Evaluator(craneSize);
+		evaluator.run(craneWorkSheet);
 	}
 
 	/*
 	 * createSubset takes the whole requestList, but uses it in an online fashion:
 	 */
-	public static List<Request> createSubset(double alpha, int craneSize, List<Request> requestList) {
-		List<Request> subset = new ArrayList<Request>();
+	public static Subset createSubset(int index, double alpha, int craneSize, List<Request> requestList) {
+		List<Request> subsetList = new ArrayList<Request>();
 		List<Request> bestRSubset = new ArrayList<Request>();
 		Double timeLimit = Double.MAX_VALUE; // waits forever until it gets the first request;
 		for (Request r : requestList) {
 			if (r.getRequestTime() > timeLimit) { // if the request arrives after the timelimit, it is excluded from the subset:
 				break;
 			} else { // add the request to the subset and compute the new timelimit for the next request:
-				subset.add(r);
-				bestRSubset = TourCalculator.kPermutate(craneSize, subset); // this is a temporary best subset; it becomes definitive if the next request is too late;
+				subsetList.add(r);
+				bestRSubset = TourCalculator.kPermutate(craneSize, subsetList); // this is a temporary best subset; it becomes definitive if the next request is too late;
 				timeLimit = alpha * TourCalculator.getTotalDistance(bestRSubset);
 			}
 		}
-		return bestRSubset;
+		return new Subset(index, bestRSubset, timeLimit);
 	}
 
-	public static void execute(List<Request> subset, Progress progress) {
-		// update all data:
-		progress.update(subset);
-		
-		// prepare output:
-		String indexList = subset.stream()
-			      .map(n -> String.valueOf(n.getIndex()))
-			      .collect(Collectors.joining(", ", "{", "}"));
-		
-		// output:
-		System.out.println("Subset " + progress.getSubsetCounter() + ": " + indexList + " -> Time elapsed: " + TourCalculator.getTotalDistance(subset) + ";");
+	private static void execute(Subset subset) {
 	}
 }

@@ -6,16 +6,20 @@ public class Request {
 	private Double y;
 	private Double requestTime;
 
-	public Request(Integer index, Double xPos, Double yPos, Double requestTime) {
+	public Request(Integer index, Double requestTime, Double xPos, Double yPos) {
 		super();
 		this.index = index;
+		this.requestTime = requestTime;
 		this.x = xPos;
 		this.y = yPos;
-		this.requestTime = requestTime;
 	}
 
 	public Integer getIndex() {
 		return index;
+	}
+	
+	public Double getRequestTime() {
+		return requestTime;
 	}
 
 	public Double getX() {
@@ -24,9 +28,5 @@ public class Request {
 
 	public Double getY() {
 		return y;
-	}
-
-	public Double getRequestTime() {
-		return requestTime;
 	}
 }

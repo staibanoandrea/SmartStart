@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class TourCalculator {
-	public static final Request origin = new Request(null, 0.0, 0.0, null);
-
 	/*
 	 * arrange the recursive call for the real permutation method:
 	 */
@@ -74,7 +72,7 @@ public class TourCalculator {
 		if (subset == null || subset.isEmpty()) {
 			return Double.MAX_VALUE;
 		}
-		Double totalDistance = chebyshevDistance(origin, subset.get(0));
+		Double totalDistance = chebyshevDistance(SmartStart.origin, subset.get(0));
 		ListIterator<Request> r = subset.listIterator();
 		Request current = r.next();
 		while (r.hasNext()) {
@@ -82,7 +80,7 @@ public class TourCalculator {
 			totalDistance += chebyshevDistance(current, next);
 			current = next;
 		}
-		totalDistance += chebyshevDistance(subset.get(subset.size() - 1), origin);
+		totalDistance += chebyshevDistance(subset.get(subset.size() - 1), SmartStart.origin);
 		return totalDistance;
 	}
 
