@@ -37,10 +37,11 @@ public class SmartStart {
 		if (mode == 0) {
 			// iteratively get the best subset to serve, and remove it from the list:
 			int i = 0;
+			double time = 0.0;
 			while (!requestList.isEmpty()) {
 				i++;
-				Subset subset = createSubset(i, alpha, craneSize, requestList);
-				execute(subset); // placeholder call for crane to work
+				Subset subset = createSubset(i, alpha, craneSize, requestList, time);
+				time = execute(subset, time); // placeholder call for crane to work, actually moves time
 				craneWorkSheet.add(subset);
 				requestList.removeAll(subset.getRequestList());
 			}
@@ -54,12 +55,12 @@ public class SmartStart {
 	/*
 	 * createSubset takes the whole requestList, but uses it in an online fashion:
 	 */
-	public static Subset createSubset(int index, double alpha, int craneSize, List<Request> requestList) {
+	public static Subset createSubset(int index, double alpha, int craneSize, List<Request> requestList, double time) {
 		List<Request> subsetList = new ArrayList<Request>();
 		List<Request> bestRSubset = new ArrayList<Request>();
 		Double timeLimit = Double.MAX_VALUE; // waits forever until it gets the first request;
 		for (Request r : requestList) {
-			if (r.getRequestTime() > timeLimit) { // if the request arrives after the timelimit, it is excluded from the subset:
+			if (r.getRequestTime() > timeLimit + time) { // if the request arrives after the timelimit, it is excluded from the subset:
 				break;
 			} else { // add the request to the subset and compute the new timelimit for the next request:
 				subsetList.add(r);
@@ -70,6 +71,7 @@ public class SmartStart {
 		return new Subset(index, bestRSubset, timeLimit);
 	}
 
-	private static void execute(Subset subset) {
+	private static double execute(Subset subset, double time) {
+		return time + TourCalculator.getTotalDistance(subset.getRequestList());
 	}
 }
