@@ -54,7 +54,7 @@ public class Evaluator {
 		// print recap:
 		System.out.println();
 		System.out.println("Number of travels: " + craneWorkSheet.size());
-		System.out.println("Time spent idle: " + new BigDecimal(idleTime).setScale(5, RoundingMode.HALF_UP));
+		System.out.println("Time spent idle with pending requests: " + new BigDecimal(idleTime).setScale(5, RoundingMode.HALF_UP));
 		System.out.println("Time spent travelling: " + new BigDecimal(totalDistance).setScale(5, RoundingMode.HALF_UP));
 		System.out.println("Average travel time: "
 				+ new BigDecimal(totalDistance / craneWorkSheet.size()).setScale(5, RoundingMode.HALF_UP));
