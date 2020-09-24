@@ -9,7 +9,7 @@ public class Request {
 	public Request(Integer index, Double requestTime, Double xPos, Double yPos) {
 		super();
 		this.index = index;
-		this.requestTime = requestTime;
+		this.requestTime = (requestTime == null ? null : requestTime * 6);
 		this.x = xPos;
 		this.y = yPos;
 	}
