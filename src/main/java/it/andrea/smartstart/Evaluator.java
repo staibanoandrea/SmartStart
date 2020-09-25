@@ -76,5 +76,7 @@ public class Evaluator {
 		for (int i = 0; i < craneSize; i++) {
 			System.out.print("[" + satisfiedRequestsBySize[i] + "]\t");
 		}
+		System.out.println();
+		System.out.println();
 	}
 }
