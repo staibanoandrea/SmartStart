@@ -96,6 +96,7 @@ public class SmartStart {
 			for (int i = 0; i < craneSize; i++) {
 				bestRSubset.add(requestList.get(i));
 			}
+			bestRSubset = TourCalculator.kPermutate(craneSize, bestRSubset);
 			timeLimit = Math.max(bestRSubset.get(craneSize - 1).getRequestTime() - craneBackTime, 0);
 		}
 
@@ -108,12 +109,14 @@ public class SmartStart {
 						break;
 					} else {
 						bestRSubset.add(r);
+						bestRSubset = TourCalculator.kPermutate(craneSize, bestRSubset);
 						timeLimit = alpha * TourCalculator.getTotalDistance(bestRSubset);
 					}
 				}
 				// CASE 2: the request arrives while the crane is still traveling:
 				else {
 					bestRSubset.add(r);
+					bestRSubset = TourCalculator.kPermutate(craneSize, bestRSubset);
 					if (craneStartTime + alpha * TourCalculator.getTotalDistance(bestRSubset) > craneBackTime) {
 						timeLimit = craneStartTime + alpha * TourCalculator.getTotalDistance(bestRSubset)
 								- craneBackTime;
@@ -128,7 +131,7 @@ public class SmartStart {
 				}
 			}
 		}
-		
+
 		// TODO
 		// MODE 3: same as mode 0, but prevent requests starvation:
 
