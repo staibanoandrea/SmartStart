@@ -27,7 +27,7 @@ public class SmartStart {
 		List<Subset> craneWorkSheet = new ArrayList<Subset>();
 
 		// create the list of requests from files:
-		List<Request> requestList = Reader.translateFile(timeFile, coordFile);
+		List<Request> requestList = TextReader.translateFile(timeFile, coordFile);
 
 		// pop the origin:
 		origin = requestList.get(originIndex);

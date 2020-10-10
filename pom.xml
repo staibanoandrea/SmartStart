@@ -11,11 +11,13 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 	</properties>
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
-		<!-- <dependency> <groupId>redis.clients</groupId> <artifactId>jedis</artifactId> 
-			<version>3.3.0</version> </dependency> -->
+		<dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>5.2</version>
+		</dependency>
 	</dependencies>
-		<build>
+	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Reader {
+public class TextReader {
 	public static List<Request> translateFile(File timeFile, File coordFile) {
 		List<Request> requestList = new ArrayList<Request>();
 		try {
@@ -36,7 +36,7 @@ public class Reader {
 			timeReader.close();
 			coordReader.close();
 		} catch (FileNotFoundException e) {
-			System.out.println("An error occurred.");
+			System.out.println("An error occurred: file not found.");
 			e.printStackTrace();
 		}
 		return requestList;
