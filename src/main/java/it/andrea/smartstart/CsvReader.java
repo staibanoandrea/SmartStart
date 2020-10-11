@@ -3,6 +3,7 @@ package it.andrea.smartstart;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +14,17 @@ public class CsvReader {
 	private static final String POSIZIONE_IN = "Ingresso in una posizione";
 	private static final String POSIZIONE_OUT = "Uscita da una posizione";
 
-	public static List<Request> translateFile(File csvFile) {
-		List<Request> requestList = new ArrayList<Request>();
+	public static List<CsvRequest> translateFile(File csvFile) {
+		List<CsvRequest> requestList = new ArrayList<CsvRequest>();
+		
 		int i = 1;
-
-		for (String[] request : getFileData(csvFile)) {
-			requestList.add(new Request(i, requestTime, xPos, yPos));
-
+		try {
+			for (String[] request : getFileData(csvFile)) {
+				requestList.add(new CsvRequest(i, request[1], request[3]));
+			}
 			i++;
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 
 		return requestList;
@@ -41,10 +45,10 @@ public class CsvReader {
 			}
 			reader.close();
 		} catch (CsvValidationException e) {
-			System.out.println("An error occurred: file not found.");
+			System.out.println("An error occurred: CsvValidationException.");
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("An error occurred: file not found.");
+			System.out.println("An error occurred: IOException.");
 			e.printStackTrace();
 		}
 		return untranslatedList;
