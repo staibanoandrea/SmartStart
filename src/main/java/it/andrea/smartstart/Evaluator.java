@@ -15,16 +15,68 @@ public class Evaluator {
 	private Double totWaitingTime = 0.0; // total time waited from every single request;
 	private Double maxWaitingTime = 0.0; // max time waited from every single request;
 	private Integer maxWaitingIndex;
+	double craneUsage;
+
+	private Integer craneWorkSheetSize = 0;
 
 	public Evaluator(int craneSize) {
 		this.craneSize = craneSize;
 		this.satisfiedRequestsBySize = new int[craneSize];
 	}
 
+	public Integer getCraneSize() {
+		return craneSize;
+	}
+
+	public Double getTime() {
+		return time;
+	}
+
+	public int getSatisfiedRequests() {
+		return satisfiedRequests;
+	}
+
+	public int[] getSatisfiedRequestsBySize() {
+		return satisfiedRequestsBySize;
+	}
+
+	public Double getIdleTime() {
+		return idleTime;
+	}
+
+	public Double getTotalDistance() {
+		return totalDistance;
+	}
+
+	public Double getMaxTravelTime() {
+		return maxTravelTime;
+	}
+
+	public Double getTotWaitingTime() {
+		return totWaitingTime;
+	}
+
+	public Double getMaxWaitingTime() {
+		return maxWaitingTime;
+	}
+
+	public Integer getMaxWaitingIndex() {
+		return maxWaitingIndex;
+	}
+
+	public Integer getCraneWorkSheetSize() {
+		return craneWorkSheetSize;
+	}
+
+	public double getCraneUsage() {
+		return craneUsage;
+	}
+
 	public void run(List<Subset> craneWorkSheet) {
 		for (Subset subset : craneWorkSheet) {
 
 			// get data about the whole subset:
+			craneWorkSheetSize = craneWorkSheet.size();
 			Double travelDistance = TourCalculator.getTotalDistance(subset.getRequestList());
 			if (travelDistance > maxTravelTime) {
 				maxTravelTime = travelDistance;
@@ -53,20 +105,21 @@ public class Evaluator {
 		}
 		// print recap:
 		System.out.println();
-		System.out.println("Number of travels: " + craneWorkSheet.size());
-		System.out.println("Time spent idle with pending requests: " + new BigDecimal(idleTime).setScale(5, RoundingMode.HALF_UP));
+		System.out.println("Number of travels: " + craneWorkSheetSize);
+		System.out.println(
+				"Time spent idle with pending requests: " + new BigDecimal(idleTime).setScale(5, RoundingMode.HALF_UP));
 		System.out.println("Time spent travelling: " + new BigDecimal(totalDistance).setScale(5, RoundingMode.HALF_UP));
 		System.out.println("Average travel time: "
-				+ new BigDecimal(totalDistance / craneWorkSheet.size()).setScale(5, RoundingMode.HALF_UP));
+				+ new BigDecimal(totalDistance / craneWorkSheetSize).setScale(5, RoundingMode.HALF_UP));
 		System.out.println("Maximum travel time: " + new BigDecimal(maxTravelTime).setScale(5, RoundingMode.HALF_UP));
 		System.out.println();
-		System.out.println("Average time waited by all requests: "
+		System.out.println("Average time waited by requests: "
 				+ new BigDecimal(totWaitingTime / satisfiedRequests).setScale(5, RoundingMode.HALF_UP));
 		System.out.println("Maximum time waited by a request: "
 				+ new BigDecimal(maxWaitingTime).setScale(5, RoundingMode.HALF_UP) + " by request " + maxWaitingIndex);
 		System.out.println();
 
-		Double craneUsage = (double) satisfiedRequests / craneWorkSheet.size() / craneSize * 100;
+		craneUsage = (double) satisfiedRequests / craneWorkSheetSize / craneSize * 100;
 		System.out.println("Crane usage: " + new BigDecimal(craneUsage).setScale(2, RoundingMode.HALF_UP) + "%");
 		System.out.println("Crane usage distribution: ");
 		for (int i = 1; i <= craneSize; i++) {

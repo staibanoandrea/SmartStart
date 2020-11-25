@@ -10,49 +10,64 @@ public class SmartStart {
 
 	public static void main(String[] args) {
 		/*
-		 * expected line: java SmartStart alpha(double) craneSize(int) timeFile(file)
-		 * coordFile(file) [mode(int)]
+		 * expected line: java SmartStart alpha(double) craneSize(int)
+		 * timeFolder(folder) coordFolder(folder) [mode(int)]
 		 */
 		// there are no input checks
 		final double alpha = Double.parseDouble(args[0]);
 		final int craneSize = Integer.parseInt(args[1]);
-		final File timeFile = new File(args[2]);
-		final File coordFile = new File(args[3]);
+		final File timeFolder = new File(args[2]);
+		final File coordFolder = new File(args[3]);
+		/*
+		 * final File timeFile = new File(args[2]); final File coordFile = new
+		 * File(args[3]);
+		 */
 		int mode = 0;
 		// mode is optional, and set to default if not inserted as argument
 		if (args.length == 5) {
 			mode = Integer.parseInt(args[4]);
 		}
 
-		List<Subset> craneWorkSheet = new ArrayList<Subset>();
+		MassEvaluator massEvaluator = new MassEvaluator(craneSize);
 
-		// create the list of requests from files:
-		List<Request> requestList = TextReader.translateFile(timeFile, coordFile);
+		for (final File timeFile : timeFolder.listFiles()) {
+			for (final File coordFile : coordFolder.listFiles()) {
+				if (coordFile.getName().contains(".coord")) {
+					List<Subset> craneWorkSheet = new ArrayList<Subset>();
 
-		// pop the origin:
-		origin = requestList.get(originIndex);
-		requestList.remove(originIndex);
+					// create the list of requests from files:
+					List<Request> requestList = TextReader.translateFile(timeFile, coordFile);
 
-		int index = 0;
-		double craneStartTime = Double.MAX_VALUE; // the last time the crane left the origin;
-		double craneBackTime = 0.0; // the last time the crane went back to the origin;
+					// pop the origin:
+					origin = requestList.get(originIndex);
+					requestList.remove(originIndex);
 
-		// iteratively get the best subset to serve, and remove it from the list:
-		while (!requestList.isEmpty()) {
-			index++;
-			Subset subset = createSubset(index, alpha, craneSize, requestList, craneStartTime, craneBackTime, mode);
-			// craneStartTime is updated to when the subset is confirmed and served:
-			craneStartTime = craneBackTime + subset.getTimeWaited();
-			// craneBackTime is updated accordingly:
-			craneBackTime = craneStartTime + TourCalculator.getTotalDistance(subset.getRequestList());
-			execute(subset); // placeholder call for crane to work
-			craneWorkSheet.add(subset);
-			requestList.removeAll(subset.getRequestList());
+					int index = 0;
+					double craneStartTime = Double.MAX_VALUE; // the last time the crane left the origin;
+					double craneBackTime = 0.0; // the last time the crane went back to the origin;
+
+					// iteratively get the best subset to serve, and remove it from the list:
+					while (!requestList.isEmpty()) {
+						index++;
+						Subset subset = createSubset(index, alpha, craneSize, requestList, craneStartTime,
+								craneBackTime, mode);
+						// craneStartTime is updated to when the subset is confirmed and served:
+						craneStartTime = craneBackTime + subset.getTimeWaited();
+						// craneBackTime is updated accordingly:
+						craneBackTime = craneStartTime + TourCalculator.getTotalDistance(subset.getRequestList());
+						execute(subset); // placeholder call for crane to work
+						craneWorkSheet.add(subset);
+						requestList.removeAll(subset.getRequestList());
+					}
+
+					// evaluate the created craneWorkSheet:
+					Evaluator evaluator = new Evaluator(craneSize);
+					evaluator.run(craneWorkSheet);
+					massEvaluator.collectData(evaluator);
+				}
+			}
 		}
-
-		// evaluate the created craneWorkSheet:
-		Evaluator evaluator = new Evaluator(craneSize);
-		evaluator.run(craneWorkSheet);
+		massEvaluator.recapData();
 	}
 
 	/*
